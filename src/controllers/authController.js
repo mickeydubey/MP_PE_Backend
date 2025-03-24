@@ -14,8 +14,8 @@ class AuthController {
     // User login
     static async UserLogin(req, res) {
         try {
-            const { user_id, password } = req.body;
-            const { User, token } = await AuthService.login(user_id, password);
+            const { username, password } = req.body;
+            const { User, token } = await AuthService.login(username, password);
             res.status(200).json({ message: 'Login successful', User, token });
         } catch (error) {
             res.status(400).json({ error: error.message });
@@ -24,7 +24,10 @@ class AuthController {
 
     // Admin sign-up
     static async adminSignup(req, res) {
+        
         try {
+            console.log(req.body);
+
             const admin = await AuthService.registerAdmin(req.body);
             res.status(201).json({ message: 'Admin registered successfully', admin });
         } catch (error) {
@@ -35,15 +38,15 @@ class AuthController {
     // Admin login
     static async adminLogin(req, res) {
         try {
-            const { admin_id, password } = req.body;
-            const { admin, token } = await AuthService.adminLogin(admin_id, password);
+            const { username, password } = req.body;
+            const { admin, token } = await AuthService.adminLogin(username, password);
             res.status(200).json({ message: 'Login successful', admin, token });
         } catch (error) {
             res.status(400).json({ error: error.message });
         }
     }
 
-    // Get User profile
+    // Rest of the methods remain unchanged
     static async getUserProfile(req, res) {
         try {
             const UserId = req.User.id;
@@ -57,7 +60,6 @@ class AuthController {
         }
     }
 
-    // Update User profile
     static async updateUserProfile(req, res) {
         try {
             const UserId = req.User.id;
@@ -68,7 +70,6 @@ class AuthController {
         }
     }
 
-    // Delete User profile
     static async deleteUserProfile(req, res) {
         try {
             const UserId = req.User.id;
@@ -79,7 +80,6 @@ class AuthController {
         }
     }
 
-    // Get admin profile
     static async getAdminProfile(req, res) {
         try {
             const adminId = req.User.id;
@@ -93,7 +93,6 @@ class AuthController {
         }
     }
 
-    // Update admin profile
     static async updateAdminProfile(req, res) {
         try {
             const adminId = req.User.id;
@@ -104,7 +103,6 @@ class AuthController {
         }
     }
 
-    // Delete admin profile
     static async deleteAdminProfile(req, res) {
         try {
             const adminId = req.User.id;
@@ -115,8 +113,7 @@ class AuthController {
         }
     }
 
-      // Send OTP for password reset
-      static async sendResetOTP(req, res) {
+    static async sendResetOTP(req, res) {
         try {
             const { email } = req.body;
             const User = await AuthService.sendOTP(email);
@@ -126,7 +123,6 @@ class AuthController {
         }
     }
 
-    // Verify OTP
     static async verifyResetOTP(req, res) {
         try {
             const { email, otp } = req.body;
@@ -137,7 +133,6 @@ class AuthController {
         }
     }
 
-    // Reset password
     static async resetPassword(req, res) {
         try {
             const { email, newPassword } = req.body;
@@ -148,7 +143,5 @@ class AuthController {
         }
     }
 }
-    
-
 
 export default AuthController;

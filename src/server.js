@@ -3,6 +3,11 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
+import slotBookingRoutes from './routes/slotBookingRoutes.js';
+import bookingReceiptRoutes from './routes/BookingReceiptRoutes.js';
+import accountSettings from './routes/AccountRoutes.js';
+
+
 dotenv.config();
 
 // Initialize the app
@@ -28,17 +33,24 @@ const connectDB = async () => {
 
 connectDB();
 
-// Routes
+// API Routes setup
 app.use('/api/users', userRoutes);
+app.use('/api/admin',userRoutes);
+app.use( slotBookingRoutes);
+app.use(bookingReceiptRoutes);
+app.use(accountSettings);
 
-// Error handling middleware
+// 404 Route Not Found handler
+app.use((req, res, next) => {
+  res.status(404).json({ message: '❌ Route not found' });
+});
+
+// Central Error handling
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Internal Server Error' });
+  console.error('❌ Error:', err.stack);
+  res.status(500).json({ message: 'Internal Server Error', error: err.message });
 });
 
-// Start the server
+// Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
