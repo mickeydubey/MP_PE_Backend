@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // ✅ Link to user
     ownername: { type: String, required: true, unique: true },
     contact: {
         type: String,

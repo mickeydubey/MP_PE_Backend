@@ -2,7 +2,7 @@ import SlotBooking from '../models/slotBooking.js';
 
 class SlotBookingService {
   async bookSlot(data) {
-    const { ownername, contact, slot_no, vehicle_no, date, time } = data;
+    const { ownername, contact, slot_no, vehicle_no, date, time,userId } = data;
 
     // Check if the slot or vehicle number is already taken
     const existingSlot = await SlotBooking.findOne({
@@ -14,6 +14,7 @@ class SlotBookingService {
     }
 
     const newBooking = new SlotBooking({
+      userId,
       ownername,
       contact,
       slot_no,
