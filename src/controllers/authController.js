@@ -48,8 +48,9 @@ class AuthController {
 
     // Rest of the methods remain unchanged
     static async getUserProfile(req, res) {
+        console.log(" getting the user profile")
         try {
-            const UserId = req.User.id;
+            const UserId = req.user.id;
             const User = await AuthService.getProfile(UserId);
             if (!User) {
                 return res.status(404).json({ message: 'User not found' });
@@ -61,8 +62,9 @@ class AuthController {
     }
 
     static async updateUserProfile(req, res) {
+
         try {
-            const UserId = req.User.id;
+            const UserId = req.user.id;
             const updatedUser = await AuthService.updateProfile(UserId, req.body);
             res.status(200).json({ message: 'User profile updated successfully', updatedUser });
         } catch (error) {
@@ -82,7 +84,7 @@ class AuthController {
 
     static async getAdminProfile(req, res) {
         try {
-            const adminId = req.User.id;
+            const adminId = req.user.id;
             const admin = await AuthService.getProfile(adminId);
             if (!admin || admin.role !== 'admin') {
                 return res.status(404).json({ message: 'Admin not found' });
