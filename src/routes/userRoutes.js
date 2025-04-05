@@ -14,7 +14,7 @@ router.delete('/delete', authMiddleware, AuthController.deleteUserProfile); // D
 // Admin routes
 router.post('/signupadmin', AuthController.adminSignup);
 router.post('/loginadmin', AuthController.adminLogin);
-router.get('/profile', authMiddleware, AuthController.getAdminProfile);
+router.get('/adminprofile', authMiddleware, AuthController.getAdminProfile);
 router.put('/update', authMiddleware, AuthController.updateAdminProfile); // Update admin profile
 router.delete('/admin/delete', authMiddleware, AuthController.deleteAdminProfile); // Delete admin profile
 
