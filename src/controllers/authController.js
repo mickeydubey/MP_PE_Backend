@@ -22,24 +22,26 @@ class AuthController {
         }
     }
 
-    // Admin sign-up
     static async adminSignup(req, res) {
-        
+        console.log("🛠 Received Signup Request:", req.body);  // Log request data
+    
         try {
-            console.log(req.body);
-
             const admin = await AuthService.registerAdmin(req.body);
-            res.status(201).json({ message: 'Admin registered successfully', admin });
+            res.status(201).json({ message: "Admin registered successfully", admin });
         } catch (error) {
+            console.error("❌ Signup Error:", error.message);
             res.status(400).json({ error: error.message });
         }
     }
+    
 
     // Admin login
     static async adminLogin(req, res) {
+        console.log("req",req.body);
+        
         try {
-            const { username, password } = req.body;
-            const { admin, token } = await AuthService.adminLogin(username, password);
+            const { email, password } = req.body;
+            const { admin, token } = await AuthService.adminLogin(email, password);
             res.status(200).json({ message: 'Login successful', admin, token });
         } catch (error) {
             res.status(400).json({ error: error.message });
@@ -84,6 +86,8 @@ class AuthController {
 
     static async getAdminProfile(req, res) {
         try {
+            console.log("admin:",req);
+            
             const adminId = req.user.id;
             const admin = await AuthService.getProfile(adminId);
             if (!admin || admin.role !== 'admin') {

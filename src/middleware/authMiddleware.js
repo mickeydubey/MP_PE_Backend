@@ -4,6 +4,9 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = 'your_jwt_secret';
 const authMiddleware = (req, res, next) => {
+console.log("req:",req);
+
+
     const authHeader = req.header('Authorization');
   
     // 🔐 Handle missing token
