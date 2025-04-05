@@ -6,6 +6,8 @@ import userRoutes from './routes/userRoutes.js';
 import slotBookingRoutes from './routes/slotBookingRoutes.js';
 import bookingReceiptRoutes from './routes/BookingReceiptRoutes.js';
 import accountSettings from './routes/AccountRoutes.js';
+// import seatRoutes from "./routes/seatRoutes.js";
+import slotBookingRoute from "./routes/slotBookingRoute.js";
 
 
 dotenv.config();
@@ -39,6 +41,8 @@ app.use('/api/admin',userRoutes);
 app.use(slotBookingRoutes);
 app.use(bookingReceiptRoutes);
 app.use(accountSettings);
+// app.use(seatRoutes);
+app.use(slotBookingRoute);
 
 // 404 Route Not Found handler
 // app.use((req, res, next) => {
