@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import otpGenerator from 'otp-generator';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import bcrypt from "bcrypt";
 
 const JWT_SECRET = 'your_jwt_secret';
 const OTP_EXPIRY = 5 * 60 * 1000;
@@ -14,10 +15,34 @@ class AuthService {
     }
 
     static async registerAdmin(data) {
-        const admin = new User({ ...data, role: 'admin' });
-        await admin.save();
-        return admin;
+        console.log("📩 Received Data Before Save:", data);  // Log incoming data
+    
+        // const hashedPassword = await bcrypt.hash(data.password, 10);
+    
+        const admin = new User({ 
+            username: data.username || null, 
+            email: data.email, 
+            phone: data.phone || null, 
+            admin_id: data.admin_id || "DEFAULT_ADMIN_ID",  // Ensure it's assigned
+            password: data.password, 
+            role: "admin" 
+        });
+    
+        try {
+            const savedAdmin = await admin.save();
+            console.log("✅ Saved Admin:", savedAdmin);  // Log after saving
+            return savedAdmin;
+        } catch (error) {
+            console.error("❌ MongoDB Save Error:", error);
+            if (error.errors) {
+                console.error("Validation Errors:", error.errors);
+            }
+            throw new Error("Failed to register admin.");
+        }
+        
     }
+    
+    
 
     static async login(username, password) {
         const user = await User.findOne({ username, role: 'user' });
@@ -38,8 +63,10 @@ class AuthService {
         return { User: user, token };
     }
 
-    static async adminLogin(username, password) {
-        const admin = await User.findOne({ username, role: 'admin' });
+    static async adminLogin(email, password) {
+        const admin = await User.findOne({ email, role: 'admin' });
+        console.log("admin:",admin);
+        
         if (!admin) {
             throw new Error('Admin not found');
         }
@@ -50,7 +77,7 @@ class AuthService {
 
         const token = jwt.sign({ 
             id: admin._id, 
-            username: admin.username,
+            email: admin.email,
             role: admin.role 
         }, JWT_SECRET, { expiresIn: '1h' });
 
@@ -82,7 +109,7 @@ class AuthService {
     }
 
     static async sendOTP(email) {
-        const otp = otpGenerator.generate(6, {
+        const otp = otpGenerator.generate(5, {
             digits: true,
             lowerCaseAlphabets: false,
             upperCaseAlphabets: false,
